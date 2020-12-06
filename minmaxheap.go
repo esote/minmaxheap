@@ -16,6 +16,10 @@ import (
 	"math/bits"
 )
 
+// Interface from the heap package, so that code that imports minmaxheap does
+// not have to import "container/heap".
+type Interface = heap.Interface
+
 func level(i int) int {
 	return bits.Len(uint(i)+1) - 1
 }
@@ -48,11 +52,11 @@ func rchild(i int) int {
 	return i*2 + 2
 }
 
-func down(h heap.Interface, i, n int) {
+func down(h Interface, i, n int) {
 	downMinMax(h, i, n, isMinLevel(i))
 }
 
-func downMinMax(h heap.Interface, m, n int, min bool) {
+func downMinMax(h Interface, m, n int, min bool) {
 	for hasChildren(m, n) {
 		child := true
 		i := m
@@ -82,7 +86,7 @@ func downMinMax(h heap.Interface, m, n int, min bool) {
 	}
 }
 
-func up(h heap.Interface, i int) {
+func up(h Interface, i int) {
 	min := isMinLevel(i)
 	if hasParent(i) && h.Less(i, parent(i)) != min {
 		h.Swap(i, parent(i))
@@ -92,7 +96,7 @@ func up(h heap.Interface, i int) {
 	}
 }
 
-func upMinMax(h heap.Interface, i int, min bool) {
+func upMinMax(h Interface, i int, min bool) {
 	for hasGrandparent(i) && h.Less(i, parent(parent(i))) == min {
 		h.Swap(i, parent(parent(i)))
 		i = parent(parent(i))
@@ -101,7 +105,7 @@ func upMinMax(h heap.Interface, i int, min bool) {
 
 // Init establishes heap ordering. The complexity is O(7n/3) = O(n) where n =
 // h.Len().
-func Init(h heap.Interface) {
+func Init(h Interface) {
 	n := h.Len()
 	for i := n/2 - 1; i >= 0; i-- {
 		down(h, i, n)
@@ -110,14 +114,14 @@ func Init(h heap.Interface) {
 
 // Push pushes the element x onto the heap. The complexity is O(0.5log(n+1)) =
 // O(log(n)) where n = h.Len().
-func Push(h heap.Interface, x interface{}) {
+func Push(h Interface, x interface{}) {
 	h.Push(x)
 	up(h, h.Len()-1)
 }
 
 // PopMin removes and returns the minimum element from the heap. The complexity
 // is O(2.5log(n)) = O(log(n)) where n = h.Len().
-func PopMin(h heap.Interface) interface{} {
+func PopMin(h Interface) interface{} {
 	// Minimum element is at h[0]
 	n := h.Len()
 	h.Swap(0, n-1)
@@ -127,7 +131,7 @@ func PopMin(h heap.Interface) interface{} {
 
 // PopMax removes and returns the maximum element from the heap. The complexity
 // is O(2.5log(n)) = O(log(n)) where n = h.Len().
-func PopMax(h heap.Interface) interface{} {
+func PopMax(h Interface) interface{} {
 	n := h.Len()
 	if n <= 2 {
 		// n=1: pop root h[0]
