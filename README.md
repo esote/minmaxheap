@@ -1,4 +1,4 @@
-# minmaxheap
+# minmaxheap [![Go Reference](https://pkg.go.dev/badge/github.com/esote/minmaxheap.svg)](https://pkg.go.dev/github.com/esote/minmaxheap) [![Go Report Card](https://goreportcard.com/badge/github.com/esote/minmaxheap)](https://goreportcard.com/report/github.com/esote/minmaxheap)
 
 Min-max heap operations for any type that implements heap.Interface. A min-max
 heap can be used to implement a double-ended priority queue.
